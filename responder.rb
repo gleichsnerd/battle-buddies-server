@@ -1,8 +1,18 @@
 class Responder
 
-  def initialize(dt = 0.1)
+  def initialize(options = {})
     @can_return = false
-    @dt = dt
+
+    if options[:dt]
+      @dt = options[:dt]
+    else 
+      @dt = 0.1
+    end
+
+    if options[:turn]
+      @turn = options[:turn]
+    end
+
   end
 
   def wait_and_return

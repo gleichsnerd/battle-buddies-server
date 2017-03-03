@@ -8,6 +8,11 @@ class Player
     @id=SecureRandom.uuid
   end
 
-  
+  def to_h
+    {
+      :type => "player",
+      :id => @id
+    }
+  end
 
 end

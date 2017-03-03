@@ -1,9 +1,9 @@
 ---
  environment: development
  address: 127.0.0.1
- user: thin
- group: thin
- port: 4567
+ user: adam.gleichsner
+ group: staff
+ port: 8282
  pid: ./thin.pid
  rackup: ./config.ru
  log: ./thin.log
