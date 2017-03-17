@@ -23,4 +23,6 @@ class Turn
     @player = player
   end
 
+  
+
 end

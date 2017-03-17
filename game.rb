@@ -17,8 +17,13 @@ class Game
 
   def display(options = {})
     if options.size == 0
+      players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h_public }
+      deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h_public }
+
       {
-        :board => @board.to_h
+        :board => @board.to_h,
+        :players => players,
+        :deceased => deceased
       }
     else
       p options
@@ -35,13 +40,21 @@ class Game
     p turns
 
     turns.each do |turn|
-      # p "Parsing turn: " + turn.player.id + " " + turn.p_action # + " " + turn.direction 
-      case turn.p_action
-        when :move
-          "Player is moving"
-          player_move(turn.player, turn.direction)
-        else
-          # TODO
+      p "Parsing turn"
+
+      if !turn.player.is_dead?
+        case turn.p_action
+          when :move
+            "Player is moving"
+            player_move(turn.player, turn.direction)
+          when :attack
+            "Player is attacking"
+            player_attack(turn.player, turn.direction)
+          else
+            # TODO
+        end
+      else
+        turn.player.dead
       end
     end
   end
@@ -52,7 +65,21 @@ class Game
   end
 
   def player_attack(player, direction)
-    
+    obj = @board.get_object_relative_to_player(player, direction)
+
+    if obj.nil?
+      player.miss(direction)
+    else
+      player.attack(obj)
+    end
+  end
+
+  def cleanup_corpses
+    @players.each do |key, player|
+      if player.is_dead?
+        @board.remove_player(player)
+      end
+    end
   end
 
 end

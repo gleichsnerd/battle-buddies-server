@@ -40,9 +40,13 @@ class GameManager
 
   def stop
     # p "Killing game thread"
-    @playing = false
-    @game_thread.exit
-    @game_thread.join
+    if is_running?
+      @playing = false
+      @game_thread.exit
+      @game_thread.join
+    end
+    @game = nil
+    { :success => true, :message => "Game stopped" }.to_json
   end
 
   def game_loop(seconds_per_tick, dt)
@@ -64,6 +68,7 @@ class GameManager
     p "Game tick"
     @ticks += 1
     @mutex.synchronize do
+      @game.cleanup_corpses
       @game.parse_turns(@turns)
       @turns = Array.new
     end
@@ -113,7 +118,7 @@ class GameManager
   def display( args = {} )
     {
       :game => @game.display(args)
-    }
+    }.to_json
   end
 
   def add_player

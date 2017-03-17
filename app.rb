@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'bundler'
+require 'pry'
 
 Bundler.require
 
@@ -52,6 +53,11 @@ class App < Sinatra::Application
     @@gm.create_game
     
     p "Game created!"
+  end
+
+  delete '/game' do
+    fail_if_gm_nil
+    @@gm.stop
   end
 
   post '/game/start' do
