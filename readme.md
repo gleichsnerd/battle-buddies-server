@@ -31,7 +31,7 @@ Then,
        threaded: true
       ```
     3. Replace "user.name" in config.yml with your system username
-    4. run ```thin start -R config.ru -C config.yml```
+    4. run thin start -R config.ru -C config.yml
     5. Pray that it works
 
 **To run**

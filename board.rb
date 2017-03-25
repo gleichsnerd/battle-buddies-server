@@ -50,7 +50,7 @@ class Board
         if element.nil?
           h_row.insert(y, nil)
         else
-          h_row.insert(y, element.to_h_public)
+          h_row.insert(y, element.to_h)
         end
       end
       h_board.insert(x, h_row)

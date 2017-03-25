@@ -68,7 +68,7 @@ class GameManager
     p "Game tick"
     @ticks += 1
     @mutex.synchronize do
-      @game.cleanup_corpses
+      @game.cleanup
       @game.parse_turns(@turns)
       @turns = Array.new
     end
@@ -121,8 +121,9 @@ class GameManager
     }.to_json
   end
 
-  def add_player
-    player = Player.new
+  def add_player(params)
+    name = params[:name]
+    player = Player.new(name)
     @mutex.synchronize do
       @game.add_player player
     end

@@ -17,7 +17,7 @@ class Game
 
   def display(options = {})
     if options.size == 0
-      players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h_public }
+      players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h }
       deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h_public }
 
       {
@@ -45,16 +45,18 @@ class Game
       if !turn.player.is_dead?
         case turn.p_action
           when :move
-            "Player is moving"
+            # "Player is moving"
             player_move(turn.player, turn.direction)
           when :attack
-            "Player is attacking"
+            # "Player is attacking"
             player_attack(turn.player, turn.direction)
+          when :defend
+            # "Player is defending"
+            player_defend(turn.player, turn.direction)
           else
-            # TODO
+            # Do nothing
+            player_wait(turn.player)
         end
-      else
-        turn.player.dead
       end
     end
   end
@@ -70,15 +72,25 @@ class Game
     if obj.nil?
       player.miss(direction)
     else
-      player.attack(obj)
+      player.attack(obj, direction)
     end
   end
 
-  def cleanup_corpses
+  def player_defend(player, direction)
+    player.block(direction)
+  end
+
+  def player_wait(player)
+    player.wait
+  end
+
+  def cleanup
     @players.each do |key, player|
       if player.is_dead?
         @board.remove_player(player)
       end
+
+      player.unblock
     end
   end
 

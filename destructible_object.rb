@@ -10,7 +10,7 @@ class DestructibleObject < GameObject
     @defence = defence
   end
 
-  def attacked(player)
+  def attacked(player, direction)
     dmg = player.dmg
     return_event = "You attacked the thing."
 

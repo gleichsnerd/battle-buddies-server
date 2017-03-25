@@ -23,6 +23,19 @@ class Turn
     @player = player
   end
 
-  
+  def self.opposite_direction(direction)
+    case direction
+    when :up
+      :down
+    when :down
+      :up
+    when :left
+      :right
+    when :right
+      :left
+    else 
+      :none
+    end
+  end
 
 end

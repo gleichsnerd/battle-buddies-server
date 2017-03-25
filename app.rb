@@ -1,5 +1,3 @@
-# require 'sinatra'
-
 require 'rubygems'
 require 'bundler'
 require 'pry'
@@ -7,9 +5,6 @@ require 'pry'
 Bundler.require
 
 require './game_manager'
-# require './responder'
-
-
 
 class App < Sinatra::Application
 
@@ -76,7 +71,7 @@ class App < Sinatra::Application
     if @@gm.is_running?
       p "Game in progress"
     else
-      player = @@gm.add_player()
+      player = @@gm.add_player(params)
       JSON.generate(player.to_h)
     end
   end

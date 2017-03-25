@@ -1,31 +1,26 @@
-var HTTP = require('http');
+var request = require('request');
 
 var options = {
-  host: 'localhost',
-  port: '8282',
-  path: '/game/turn'
+  uri: 'http://localhost:8282/game/turn',
+  method: 'POST',
+  form: {
+    action: 'defend',
+    direction: 'right',
+    player_id: 'de5fee91-6d4e-4c75-b473-64d91076abac'
+  }
 }
 
-callback = function(response) {
-  var result = '';
-  response.on('data', function(chunk) {
-    result += chunk;
-  });
-
-  response.on('end', function() {
-    console.log(result);
-  });
+var defend_right = function() {
+  request.post('http://localhost:8282/game/turn', options).on('response', function (response) {
+      console.log("responded!");
+      console.log(response.statusCode);
+        if (response.statusCode == 200) {
+          console.log("blocking right");
+          defend_right();  
+        }
+    }
+  );
 }
 
-console.log("starting loop");
-
-
-function chain() {
-  HTTP.get(options, callback).on('error', function(e) {
-      console.log(e);
-  });
-}
-
-for(var i = 0; i < 100; i++) {
-  chain();
-}
+console.log("start");
+defend_right();
