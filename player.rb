@@ -105,7 +105,6 @@ class Player < DestructibleObject
       :type => :player,
       :id => @id,
       :name => @name,
-      :pos => @pos,
       :hp => @hp,
       :dmg => @dmg,
       :defence => @defence,

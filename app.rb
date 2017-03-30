@@ -5,6 +5,7 @@ require 'pry'
 Bundler.require
 
 require './game_manager'
+require './response'
 
 class App < Sinatra::Application
 
@@ -20,15 +21,12 @@ class App < Sinatra::Application
 
   def fail_if_gm_nil
     if !gm?
-      halt(500, {
-        success: false,
-        reason: "Game Manager has not been created"
-        }.to_json)
+      halt(500, Response.new(false, "Game Manager has not been created").to_h)
     end
   end
 
   get '/' do
-    "Welcome to Battle Bots!"
+    Response.new(true, { :message => "Welcome to Battle Bots!" }).to_h
   end
 
   get '/game' do
@@ -39,7 +37,7 @@ class App < Sinatra::Application
     r = gm_response[:responder]
 
     r.wait_and_return {
-      @@gm.display
+      Response.new(true, @@gm.display).to_h
     }
   end
 
@@ -65,14 +63,26 @@ class App < Sinatra::Application
     end
   end
 
+  post '/game/pause' do
+    fail_if_gm_nil
+    @@gm.pause
+    Response.new(true, "Game paused").print
+  end
+
+  post '/game/unpause' do
+    fail_if_gm_nil
+    @@gm.unpause
+    Response.new(true, "Game unpaused").print
+  end
+
   post '/player' do
     fail_if_gm_nil
 
     if @@gm.is_running?
-      p "Game in progress"
+      Response.new(false, "Game in progress").print
     else
       player = @@gm.add_player(params)
-      JSON.generate(player.to_h)
+      Response.new(true, player.to_h).print
     end
   end
 
@@ -85,7 +95,7 @@ class App < Sinatra::Application
     pid = gm_response[:player_id]
 
     r.wait_and_return {
-      @@gm.display({:player_id => pid})
+      Response.new(true, @@gm.display({:player_id => pid})).print
     }
   end
 

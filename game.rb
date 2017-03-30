@@ -1,11 +1,13 @@
+require './bb_object'
 require './board'
 require './player'
 
-class Game
+class Game < BBObject
 
   attr_reader :players
 
   def initialize(width, height, number_of_players)
+    super(:game)
     @board = Board.new(width, height, number_of_players)
     @players = Hash.new()
   end
@@ -17,21 +19,15 @@ class Game
 
   def display(options = {})
     if options.size == 0
-      players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h }
-      deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h_public }
-
-      {
-        :board => @board.to_h,
-        :players => players,
-        :deceased => deceased
-      }
+      to_h
     else
-      p options
+      h = to_h
       player_id = options[:player_id]
-      {
-        :board => @board.to_h,
-        :player => @players[player_id].to_h
-      }
+      player = @players[player_id].to_h
+      
+      h.merge({
+        :player => player  
+      })
     end
   end
 
@@ -92,6 +88,23 @@ class Game
 
       player.unblock
     end
+  end
+
+  def to_h
+    to_h_public
+  end
+
+  def to_h_public
+    h = super
+    players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h_public }
+    deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h_public }
+    addn = {
+        :board => @board.to_h,
+        :players => players,
+        :deceased => deceased
+    }
+
+    h.merge(addn)
   end
 
 end

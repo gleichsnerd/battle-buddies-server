@@ -49,6 +49,14 @@ class GameManager
     { :success => true, :message => "Game stopped" }.to_json
   end
 
+  def pause
+    @pause = true
+  end
+
+  def unpause
+    @pause = false
+  end
+
   def game_loop(seconds_per_tick, dt)
     last_tick = Time.now
     while @playing do
@@ -59,7 +67,9 @@ class GameManager
       if (Time.now - last_tick) >= seconds_per_tick
         # p "Execute tick"
         last_tick += seconds_per_tick
-        game_tick()
+        if !@pause
+          game_tick()
+        end
       end
     end
   end
@@ -118,7 +128,7 @@ class GameManager
   def display( args = {} )
     {
       :game => @game.display(args)
-    }.to_json
+    }
   end
 
   def add_player(params)

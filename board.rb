@@ -1,10 +1,12 @@
+require './bb_object'
 require './player'
 require './indestructible_object'
 
-class Board
+class Board < BBObject
   attr_reader :width, :height, :positions
 
   def initialize(width, height, number_of_players)
+    super(:board)
     @width = width
     @height = height
     @number_of_players = number_of_players
@@ -31,32 +33,6 @@ class Board
 
     @board[pos[:x]][pos[:y]] = player
     @positions[player.id] = pos
-  end
-
-  def to_h
-    {
-      :type => 'board',
-      :grid => hash_board,
-      :max_players => @number_of_players
-    }
-  end
-
-  def hash_board
-    h_board = Array.new()
-
-    @board.each_with_index do |row, x|
-      h_row = Array.new()
-      row.each_with_index do |element, y|
-        if element.nil?
-          h_row.insert(y, nil)
-        else
-          h_row.insert(y, element.to_h)
-        end
-      end
-      h_board.insert(x, h_row)
-    end
-
-    h_board
   end
 
   def move(player, direction)
@@ -167,6 +143,36 @@ class Board
 
   def is_occupied (x, y)
     !is_accessible(x, y)
+  end
+
+  def hash_board
+    h_board = Array.new()
+
+    @board.each_with_index do |row, x|
+      h_row = Array.new()
+      row.each_with_index do |element, y|
+        if element.nil?
+          h_row.insert(y, nil)
+        else
+          h_row.insert(y, element.to_h_public)
+        end
+      end
+      h_board.insert(x, h_row)
+    end
+
+    h_board
+  end
+
+  def to_h
+    h = super
+    additional_params = {
+      :grid => hash_board,
+      :width => @width,
+      :height => @height,
+      :max_players => @number_of_players
+    }
+
+    h.merge(additional_params)
   end
 
 end

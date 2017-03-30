@@ -1,4 +1,6 @@
-class GameObject
+require './bb_object'
+
+class GameObject < BBObject
 
   attr_accessor :type, :events, :pos
 
@@ -21,16 +23,16 @@ class GameObject
   end
 
   def to_h_public
-    {
-      :type => @type
-    }
+    super
   end
 
   def to_h
-    {
-      :type => @type,
+    h = super
+    additional_fields = {
       :events => @events
     }
+
+    h.merge(additional_fields)
   end
 
 end
