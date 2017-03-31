@@ -8,6 +8,14 @@ require './game_manager'
 require './response'
 
 class App < Sinatra::Application
+  
+  before do
+    content_type :json
+
+    headers 'Access-Control-Allow-Origin' => '*'
+    headers 'Access-Control-Allow-Headers' => 'Authorization,Accepts,Content-Type,X-CSRF-Token,X-Requested-With'
+    headers 'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE,OPTIONS'
+  end
 
   def gm?
     !(defined?(@@gm)).nil?
@@ -21,15 +29,19 @@ class App < Sinatra::Application
 
   def fail_if_gm_nil
     if !gm?
-      halt(500, Response.new(false, "Game Manager has not been created").to_h)
+      halt(500, Response.new(false, "Game Manager has not been created").print)
     end
   end
 
   get '/' do
-    Response.new(true, { :message => "Welcome to Battle Bots!" }).to_h
+    cross_origin
+
+    Response.new(true, { :message => "Welcome to Battle Bots!" }).print
   end
 
   get '/game' do
+    cross_origin
+
     fail_if_gm_nil
     p "Received turn"
     gm_response = @@gm.observe
@@ -37,7 +49,7 @@ class App < Sinatra::Application
     r = gm_response[:responder]
 
     r.wait_and_return {
-      Response.new(true, @@gm.display).to_h
+      Response.new(true, @@gm.display).print
     }
   end
 
@@ -45,7 +57,7 @@ class App < Sinatra::Application
     create_gm_if_nil
     @@gm.create_game
     
-    p "Game created!"
+    Response.new(true, "Game created!").print
   end
 
   delete '/game' do
