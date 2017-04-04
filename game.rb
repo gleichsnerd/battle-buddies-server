@@ -13,8 +13,12 @@ class Game < BBObject
   end
 
   def add_player(player)
-    @players[player.id] = player
-    @board.put_in_starting_position(player)
+    if(@players.length < @board.number_of_players)
+      @players[player.id] = player
+      @board.put_in_starting_position(player)
+    else
+      false
+    end
   end
 
   def display(options = {})
@@ -23,10 +27,10 @@ class Game < BBObject
     else
       h = to_h
       player_id = options[:player_id]
-      player = @players[player_id].to_h
+      player_hash = @players[player_id].to_h
       
       h.merge({
-        :player => player  
+        :player => player_hash  
       })
     end
   end
@@ -96,8 +100,8 @@ class Game < BBObject
 
   def to_h_public
     h = super
-    players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h_public }
-    deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h_public }
+    players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h }
+    deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h }
     addn = {
         :board => @board.to_h,
         :players => players,

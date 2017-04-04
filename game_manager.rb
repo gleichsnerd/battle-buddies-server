@@ -134,8 +134,11 @@ class GameManager
   def add_player(params)
     name = params[:name]
     player = Player.new(name)
-    @mutex.synchronize do
-      @game.add_player player
+
+    if player
+      @mutex.synchronize do
+        @game.add_player player
+      end
     end
 
     player

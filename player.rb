@@ -4,15 +4,13 @@ require './turn'
 
 class Player < DestructibleObject
 
-  attr_accessor :id, :type, :dmg, :defence, :hp, :events, :name
+  attr_accessor :id, :type, :dmg, :defence, :hp, :events, :name, :pos
 
   def initialize(name, dmg = 1, defence = 0, hp = 4)
-    @id=SecureRandom.uuid
-    @type=:player
+    super(:player, hp, defence)
 
+    @id=SecureRandom.uuid
     @dmg = dmg
-    @defence = defence
-    @hp = hp
     @name = name
 
     @events = Array.new
@@ -108,6 +106,7 @@ class Player < DestructibleObject
       :hp => @hp,
       :dmg => @dmg,
       :defence => @defence,
+      :pos => @pos,
       :events => @events
     }
   end

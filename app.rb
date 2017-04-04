@@ -40,8 +40,6 @@ class App < Sinatra::Application
   end
 
   get '/game' do
-    cross_origin
-
     fail_if_gm_nil
     p "Received turn"
     gm_response = @@gm.observe
@@ -94,7 +92,11 @@ class App < Sinatra::Application
       Response.new(false, "Game in progress").print
     else
       player = @@gm.add_player(params)
-      Response.new(true, player.to_h).print
+      if player
+        Response.new(true, player.to_h).print
+      else
+        Response.new(false, "Maximum number of players reached").print
+      end
     end
   end
 

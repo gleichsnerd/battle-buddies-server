@@ -5,7 +5,7 @@ class GameObject < BBObject
   attr_accessor :type, :events, :pos
 
   def initialize(type = :game_object)
-    @type = type
+    super(type)
     @events = Array.new
   end
 

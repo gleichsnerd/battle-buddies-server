@@ -4,8 +4,8 @@ class DestructibleObject < GameObject
 
   attr_accessor :hp, :defence
 
-  def initialize(hp, defence)
-    @type = :destructible
+  def initialize(type = :destructible, hp, defence)
+    super(type)
     @hp = hp
     @defence = defence
   end
