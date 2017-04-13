@@ -34,8 +34,6 @@ class App < Sinatra::Application
   end
 
   get '/' do
-    cross_origin
-
     Response.new(true, { :message => "Welcome to Battle Bots!" }).print
   end
 
@@ -88,16 +86,16 @@ class App < Sinatra::Application
   post '/player' do
     fail_if_gm_nil
 
-    if @@gm.is_running?
-      Response.new(false, "Game in progress").print
-    else
+    # if @@gm.is_running?
+      # Response.new(false, "Game in progress").print
+    # else
       player = @@gm.add_player(params)
       if player
         Response.new(true, player.to_h).print
       else
         Response.new(false, "Maximum number of players reached").print
       end
-    end
+    # end
   end
 
   post '/game/turn' do

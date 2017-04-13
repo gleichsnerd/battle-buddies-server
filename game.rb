@@ -13,12 +13,12 @@ class Game < BBObject
   end
 
   def add_player(player)
-    if(@players.length < @board.number_of_players)
+    # if(@players.length < @board.number_of_players)
       @players[player.id] = player
       @board.put_in_starting_position(player)
-    else
-      false
-    end
+    # else
+      # false
+    # end
   end
 
   def display(options = {})

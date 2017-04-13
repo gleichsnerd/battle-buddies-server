@@ -28,8 +28,19 @@ class Board < BBObject
     starts
   end
 
+  def random_position
+    {
+      :x => rand(@width),
+      :y => rand(@height)
+    }
+  end
+
   def put_in_starting_position(player)
-    pos = @starting_positions.shift
+    pos = random_position
+
+    while @board[pos[:x]][pos[:y]] != nil
+      pos = random_position
+    end
 
     @board[pos[:x]][pos[:y]] = player
     player.pos = pos
