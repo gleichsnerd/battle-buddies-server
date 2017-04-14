@@ -39,7 +39,6 @@ class App < Sinatra::Application
 
   get '/game' do
     fail_if_gm_nil
-    p "Received turn"
     gm_response = @@gm.observe
 
     r = gm_response[:responder]
@@ -65,9 +64,9 @@ class App < Sinatra::Application
     create_gm_if_nil
     if @@gm.has_game?
       @@gm.start
-      p "Started game"
+      Response.new(true, { :message => "Game started!"}).print
     else
-      p "No game to start"
+      Response.new(false, { :message => "Game not yet created"}).print
     end
   end
 

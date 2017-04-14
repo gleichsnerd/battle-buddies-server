@@ -36,12 +36,7 @@ class Game < BBObject
   end
 
   def parse_turns(turns)
-    p "Parsing turns"
-    p turns
-
     turns.each do |turn|
-      p "Parsing turn"
-
       if !turn.player.is_dead?
         case turn.p_action
           when :move

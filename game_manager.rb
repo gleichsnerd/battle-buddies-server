@@ -13,7 +13,7 @@ class GameManager
     @turns = Array.new
   end
 
-  def create_game(width = 5, height = 5, number_of_players = 4)
+  def create_game(width = 7, height = 7, number_of_players = 4)
     if is_running?
       stop
     end
@@ -31,9 +31,8 @@ class GameManager
   def start(seconds_per_tick = 1, dt=0.1)
     @ticks = 0
     @playing = true
-    p "Starting game"
     @game_thread = Thread.new{
-      p "Starting loop"
+      p "Starting game"
       game_loop(seconds_per_tick, dt)
     }
   end
@@ -75,7 +74,6 @@ class GameManager
   end
 
   def game_tick()  
-    p "Game tick"
     @ticks += 1
     @mutex.synchronize do
       @game.cleanup
@@ -147,7 +145,6 @@ class GameManager
   def observe( args = {} )
     r = Responder.new()
     add_observer(r)
-    p "Queued observer"
     { :responder => r }
   end
 
@@ -158,7 +155,6 @@ class GameManager
 
     r = Responder.new({:turn => turn})
     add_turn_and_responder(turn, r)
-    p "Queued turn"
     { :responder => r, :player_id => turn.player.id }
   end
 
