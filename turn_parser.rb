@@ -18,7 +18,6 @@ class TurnParser
   }
 
   def self.parse_params (params, players)
-    p params
     if !params.nil?
       player_id = params[:player_id]
       Turn.new(

@@ -187,7 +187,7 @@ class Board < BBObject
         if element.nil?
           h_row.insert(y, nil)
         else
-          h_row.insert(y, element.to_h)
+          h_row.insert(y, element.to_h_public)
         end
       end
       h_board.insert(x, h_row)

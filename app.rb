@@ -99,7 +99,6 @@ class App < Sinatra::Application
 
   post '/game/turn' do
     fail_if_gm_nil
-    p "Received turn"
     gm_response = @@gm.submit_turn(params)
 
     r = gm_response[:responder]

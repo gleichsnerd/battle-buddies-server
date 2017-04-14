@@ -63,12 +63,15 @@ class Game < BBObject
   end
 
   def player_attack(turn)
-    obj = @board.get_object_relative_to_player(turn.player, turn.direction)
+    player = turn.player
+    direction = turn.direction 
+
+    obj = @board.get_object_relative_to_player(player, direction)
 
     if obj.nil?
-      p_event = player.miss(turn.direction)
+      p_event = player.miss(direction)
     else
-      events = player.attack(obj, turn.direction)
+      events = player.attack(obj, direction)
       a_event = events[:attacker]
       d_event = events[:defender]
     end
@@ -103,15 +106,20 @@ class Game < BBObject
   end
 
   def to_h
-    to_h_public
+    h = super
+
+    addn = {
+      :board => @board.to_h,
+    }
+
+    h.merge(addn)
   end
 
   def to_h_public
-    h = super
+    h = to_h
     players = @players.select { |k, player| !player.is_dead? }.map { |k, player| player.to_h }
     deceased = @players.select { |k, player| player.is_dead? }.map { |k, player| player.to_h }
     addn = {
-        :board => @board.to_h,
         :players => players,
         :deceased => deceased
     }
