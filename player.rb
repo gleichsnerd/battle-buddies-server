@@ -11,6 +11,7 @@ class Player < DestructibleObject
     super(:player, hp)
 
     @id=SecureRandom.uuid
+    @public_id=SecureRandom.uuid
     @dmg = dmg
     @defence = defence
     @name = name
@@ -114,24 +115,23 @@ class Player < DestructibleObject
   def to_h_public
     {
       :type => :player,
-      :name => @name,
-      :hp => @hp,
-      :dmg => @dmg,
-      :defence => @defence
-    }
-  end
-
-  def to_h
-    {
-      :type => :player,
-      :id => @id,
+      :public_id => @public_id,
       :name => @name,
       :hp => @hp,
       :dmg => @dmg,
       :defence => @defence,
-      :pos => @pos,
       :turns => @turns.map { |turn| turn.to_h }
     }
+  end
+
+  def to_h
+    h = to_h_public
+    adnl = {
+      :id => @id,
+      :pos => @pos
+    }
+
+    h.merge(adnl)
   end
 
 end
