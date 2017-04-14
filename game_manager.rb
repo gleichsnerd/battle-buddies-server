@@ -153,6 +153,9 @@ class GameManager
 
   def submit_turn(params)
     turn = TurnParser.parse_params(params, @game.players)
+
+    turn.player.add_turn(turn)
+
     r = Responder.new({:turn => turn})
     add_turn_and_responder(turn, r)
     p "Queued turn"

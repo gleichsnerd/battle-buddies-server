@@ -46,13 +46,13 @@ class Game < BBObject
         case turn.p_action
           when :move
             # "Player is moving"
-            player_move(turn.player, turn.direction)
+            player_move(turn)
           when :attack
             # "Player is attacking"
-            player_attack(turn.player, turn.direction)
+            player_attack(turn)
           when :defend
             # "Player is defending"
-            player_defend(turn.player, turn.direction)
+            player_defend(turn)
           else
             # Do nothing
             player_wait(turn.player)
@@ -62,26 +62,39 @@ class Game < BBObject
   end
 
 
-  def player_move(player, direction)
-    @board.move(player, direction)
+  def player_move(turn)
+    event = @board.move(turn.player, turn.direction)
+    turn.add_event(event)
   end
 
-  def player_attack(player, direction)
-    obj = @board.get_object_relative_to_player(player, direction)
+  def player_attack(turn)
+    obj = @board.get_object_relative_to_player(turn.player, turn.direction)
 
     if obj.nil?
-      player.miss(direction)
+      p_event = player.miss(turn.direction)
     else
-      player.attack(obj, direction)
+      events = player.attack(obj, turn.direction)
+      a_event = events[:attacker]
+      d_event = events[:defender]
+    end
+
+    turn.add_event(a_event)
+
+    if d_event != nil
+      d_turn = obj.get_latest_turn
+      if d_turn != nil
+        d_turn.add_event(d_event)
+      end
     end
   end
 
-  def player_defend(player, direction)
-    player.block(direction)
+  def player_defend(turn)
+    event = player.block(direction)
+    turn.add_event(event)
   end
 
-  def player_wait(player)
-    player.wait
+  def player_wait(turn)
+    turn.add_event(turn.player.wait)
   end
 
   def cleanup

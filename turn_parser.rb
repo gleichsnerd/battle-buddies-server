@@ -20,10 +20,12 @@ class TurnParser
   def self.parse_params (params, players)
     p params
     if !params.nil?
+      player_id = params[:player_id]
       Turn.new(
         parse_action(params[:action]),
         parse_direction(params[:direction]),
-        parse_player_id(params[:player_id], players))
+        parse_player_id(player_id, players)
+      )
     end
   end
 

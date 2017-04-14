@@ -58,37 +58,58 @@ class Board < BBObject
 
     case direction
       when :up
-        if cur_y != 0 && is_accessible(cur_x, cur_y - 1)
+        if cur_y == 0 
+          description = "You try to move #{direction}, but you instead ran into the wall"
+        elsif !is_accessible(cur_x, cur_y - 1)
+          description = "You try to move #{direction}, but someone was in your way"
+        else
+          description = "You move #{direction} a space"
           new_y = cur_y - 1
         end
       when :down
-        if cur_y != @height - 1 && is_accessible(cur_x, cur_y + 1)
+        if cur_y == @height - 1 
+          description = "You try to move #{direction}, but you instead ran into the wall"
+        elsif !is_accessible(cur_x, cur_y + 1) 
+          description = "You try to move #{direction}, but someone was in your way"
+        else
+          description = "You move #{direction} a space"
           new_y = cur_y + 1
         end
       when :left
-        if cur_x != 0 && is_accessible(cur_x - 1, cur_y)
+        if cur_x == 0 
+          description = "You try to move #{direction}, but you instead ran into the wall"
+        elsif !is_accessible(cur_x - 1, cur_y) 
+          description = "You try to move #{direction}, but someone was in your way"
+        else
+          description = "You move #{direction} a space"
           new_x = cur_x - 1
         end
       when :right
-        if cur_x != @width - 1 && is_accessible(cur_x + 1, cur_y)
+        if cur_x == @width - 1 
+          description = "You try to move #{direction}, but you instead ran into the wall"
+        elsif !is_accessible(cur_x + 1, cur_y) 
+          description = "You try to move #{direction}, but someone was in your way"
+        else
+          description = "You move #{direction} a space"
           new_x = cur_x + 1
         end
       else
+        description = "Maybe standing still is a good idea. Maybe not."
         # Don't move
     end
 
     new_pos = {:x => new_x, :y => new_y}
 
     if new_pos == cur_pos
-      result = { :success => false, :position => cur_pos }
+      event = Event.new(false, description, :move, direction)
     else
       clear_tile_at(cur_x, cur_y)
       put_player_at(player, new_x, new_y)
       @positions[player.id] = new_pos
-      result = { :success => true, :position => new_pos }
+      event = Event.new(true, description, :move, direction)
     end
 
-    result
+    event
   end
 
   def get_at(x, y)
