@@ -8,6 +8,12 @@ require './game_manager'
 require './response'
 
 class App < Sinatra::Application
+
+  configure do
+    set :show_exceptions, true
+    enable :dump_errors,:raise_errors
+    use Rack::ShowExceptions
+  end
   
   before do
     content_type :json

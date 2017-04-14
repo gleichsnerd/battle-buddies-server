@@ -87,6 +87,9 @@ class Game < BBObject
   end
 
   def player_defend(turn)
+    player = turn.player
+    direction = turn.direction
+
     event = player.block(direction)
     turn.add_event(event)
   end
