@@ -23,6 +23,11 @@ class App < Sinatra::Application
     headers 'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE,OPTIONS'
   end
 
+  error Sinatra::NotFound do
+    content_type :json
+    Response.new(false, { :message => "Endpoint not found" }).print
+  end
+
   def gm?
     !(defined?(@@gm)).nil?
   end
