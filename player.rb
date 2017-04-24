@@ -5,15 +5,15 @@ require './event'
 
 class Player < DestructibleObject
 
-  attr_accessor :id, :type, :dmg, :defence, :hp, :name, :pos
+  attr_accessor :id, :type, :dmg, :defense, :hp, :name, :pos
 
-  def initialize(name, dmg = 1, defence = 4, hp = 4)
+  def initialize(name, dmg = 1, defense = 4, hp = 4)
     super(:player, hp)
 
     @id=SecureRandom.uuid
     @public_id=SecureRandom.uuid
     @dmg = dmg
-    @defence = defence
+    @defense = defense
     @name = name
 
     @turns = Array.new
@@ -31,7 +31,7 @@ class Player < DestructibleObject
   def attacked(player, direction)
     dmg = player.dmg
     attacking_self = player.id == @id
-    shield_broken = @defence <= 0
+    shield_broken = @defense <= 0
     blocked = can_block_attack_from(direction)
 
     defender_success = false
@@ -43,9 +43,9 @@ class Player < DestructibleObject
       defender_description = "You blocked an attack!"
       attacker_description = "The attack was blocked."
 
-      @defence -= dmg
+      @defense -= dmg
 
-      if @defence <= 0
+      if @defense <= 0
         defender_description += " Your shield is broken."
       end
     else
@@ -90,7 +90,7 @@ class Player < DestructibleObject
     success = true
     if direction == :none
       description = "You contemplate lifting your shield, but decide against it."
-    elsif @defence <= 0
+    elsif @defense <= 0
       description = "You hold up your shield, but it's broken state seems discouraging"
       success = false
     else
@@ -101,7 +101,7 @@ class Player < DestructibleObject
   end
 
   def can_block_attack_from(direction)
-    @block_side != :none && Turn.opposite_direction(direction) == @block_side && @defence > 0
+    @block_side != :none && Turn.opposite_direction(direction) == @block_side && @defense > 0
   end
 
   def unblock
@@ -119,7 +119,7 @@ class Player < DestructibleObject
       :name => @name,
       :hp => @hp,
       :dmg => @dmg,
-      :defence => @defence,
+      :defense => @defense,
       :turns => @turns.map { |turn| turn.to_h }
     }
   end

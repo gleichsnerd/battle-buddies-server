@@ -2,7 +2,7 @@ require './game_object'
 
 class DestructibleObject < GameObject
 
-  attr_accessor :hp, :defence
+  attr_accessor :hp, :defense
 
   def initialize(type = :destructible, hp)
     super(type)
