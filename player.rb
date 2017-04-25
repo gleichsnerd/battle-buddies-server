@@ -128,7 +128,7 @@ class Player < DestructibleObject
     h = to_h_public
     adnl = {
       :id => @id,
-      :pos => @pos
+      :position => @pos
     }
 
     h.merge(adnl)
